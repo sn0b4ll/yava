@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Visual Studio Code
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -138,3 +138,6 @@ dmypy.json
 
 # Local History for Visual Studio Code
 .history/
+
+# Ignore VOSK
+model/
