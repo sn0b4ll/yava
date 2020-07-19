@@ -2,6 +2,7 @@
 
 import json
 import pyaudio
+import requests
 import time
 import os
 import pyttsx3
@@ -38,15 +39,28 @@ class TTS(threading.Thread):
     def run(self):
         print("Init done")
 
+    def _check_keywords(self, keywords, input):
+        if all(x in input for x in keywords):
+            return True
+        
+        return False
+
     def process(self, input):
         if self.activated:
-            if "status" in input:
-                tts_engine.say("Voice Assistand ist aktiv")    
+            if self._check_keywords(['meine', 'öffentliche internet adresse'], input):
+                tts_engine.say("Ich prüfe deine public IP")
+                response = requests.get("https://api.ipify.org?format=json")
+                tts_engine.say("Deine öffentliche addresse ist {}".format(response.json()["ip"]))
         elif keyword in input:
             # Not yet activated but keyword is called
             self.activated = True
             tts_engine.say("Voice Assistand wurde aktiviert")
-            
+        elif "status" in input:
+            if self.activated:
+                tts_engine.say("Voice Assistand ist aktiv")
+            else:
+                tts_engine.say("Voice Assistand ist nicht aktiv")
+
         tts_engine.runAndWait()
 
         
